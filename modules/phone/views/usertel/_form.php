@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\select2\Select2;
+use \yii\widgets\MaskedInput;
 /* @var $this yii\web\View */
 /* @var $model app\modules\phone\models\UserTel */
 /* @var $form yii\widgets\ActiveForm */
@@ -14,9 +15,20 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nameLastName')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'country')->textInput() ?>
+    <?= $form->field($model, 'country')->widget(Select2::classname(), [
+        'data' => $country,
+        'language' => 'ru',
+        'options' => ['placeholder' => 'selectCountry'],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ])->label(false); ?>
 
-    <?= $form->field($model, 'tel')->textInput() ?>
+
+
+    <?= $form->field($model, 'tel')->widget(MaskedInput::className(),[
+        'mask' => '+9 (999) 999-99-99'
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

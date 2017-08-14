@@ -2,6 +2,7 @@
 
 namespace app\modules\phone\models;
 
+use app\modules\country\models\Country;
 use Yii;
 
 /**
@@ -21,6 +22,10 @@ class UserTel extends \yii\db\ActiveRecord
     {
         return 'userTel';
     }
+    
+    public function getCountrys(){
+        return $this->hasOne(Country::className(),['id'=>'country']);
+    }
 
     /**
      * @inheritdoc
@@ -29,8 +34,8 @@ class UserTel extends \yii\db\ActiveRecord
     {
         return [
             [['nameLastName', 'country', 'tel'], 'required'],
-            [['country', 'tel'], 'integer'],
-            [['nameLastName'], 'string', 'max' => 610],
+            [['country'], 'integer'],
+            [['nameLastName', 'tel'], 'string', 'max' => 610],
         ];
     }
 

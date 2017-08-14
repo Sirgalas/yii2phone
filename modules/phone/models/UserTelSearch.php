@@ -41,8 +41,13 @@ class UserTelSearch extends UserTel
      */
     public function search($params)
     {
-        $query = UserTel::find();
 
+        if (array_key_exists('sort',$params)){
+            $query = UserTel::find();
+        }else{
+            $query = UserTel::find()->orderBy(['nameLastName'=>SORT_ASC]);
+
+        }
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

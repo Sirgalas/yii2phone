@@ -2,9 +2,12 @@
 
 namespace app\modules\phone\controllers;
 
+use app\modules\country\models\Country;
 use Yii;
 use app\modules\phone\models\UserTel;
 use app\modules\phone\models\UserTelSearch;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,24 +40,28 @@ class UsertelController extends Controller
     {
         $searchModel = new UserTelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
+        if (Yii::$app->request->post('hasEditable')) {
+            $bookId = Yii::$app->request->post('editableKey');
+            $model = UserTel::findOne($bookId);
+            $out = Json::encode(['output'=>'', 'message'=>'']);
+            $posted = current($_POST['UserTel']);
+            $post = ['UserTel' => $posted];
+            if ($model->load($post)) {
+                $model->save();
+                $output = '';
+                $out = Json::encode(['output'=>$output, 'message'=>'']);
+            }
+            echo $out;
+            return ;
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'country'=>$country
         ]);
     }
 
-    /**
-     * Displays a single UserTel model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
 
     /**
      * Creates a new UserTel model.
@@ -64,12 +71,13 @@ class UsertelController extends Controller
     public function actionCreate()
     {
         $model = new UserTel();
-
+        $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'country'=>$country
             ]);
         }
     }
@@ -83,12 +91,13 @@ class UsertelController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'country'=>$country
             ]);
         }
     }
