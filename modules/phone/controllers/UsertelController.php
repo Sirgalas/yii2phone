@@ -102,6 +102,7 @@ class UsertelController extends Controller
         if(empty($country)){
             $country=false;
             $dataCountry=false;
+            
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
