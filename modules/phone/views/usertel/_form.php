@@ -14,7 +14,7 @@ use \yii\widgets\MaskedInput;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'nameLastName')->textInput(['maxlength' => true]) ?>
-
+    <?php if($model->isNewRecord){ ?>
     <?= $form->field($model, 'country')->widget(Select2::classname(), [
         'data' => $country,
         'language' => 'ru',
@@ -23,9 +23,18 @@ use \yii\widgets\MaskedInput;
             'allowClear' => true
         ],
     ])->label(false); ?>
+    <?php } else{ ?>
 
-
-
+        <?= Select2::widget([
+            'name'=>'id',
+            'value' => $dataCountry,
+            'data' => $country,
+            'options' => ['multiple' => true],
+            'pluginOptions' => [
+                'tags' => true,
+            ],
+        ]);?>
+    <?php } ?>
     <?= $form->field($model, 'tel')->widget(MaskedInput::className(),[
         'mask' => '+9 (999) 999-99-99'
     ]) ?>

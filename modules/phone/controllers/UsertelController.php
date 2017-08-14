@@ -41,6 +41,9 @@ class UsertelController extends Controller
         $searchModel = new UserTelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
+        if(!empty($country)){
+            $country=false;
+        }
         if (Yii::$app->request->post('hasEditable')) {
             $bookId = Yii::$app->request->post('editableKey');
             $model = UserTel::findOne($bookId);
@@ -72,6 +75,9 @@ class UsertelController extends Controller
     {
         $model = new UserTel();
         $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
+        if(!empty($country)){
+            $country=false;
+        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
@@ -92,12 +98,18 @@ class UsertelController extends Controller
     {
         $model = $this->findModel($id);
         $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
+        $dataCountry= ArrayHelper::map(Country::find()->where(['id'=>$id])->asArray()->all(),'id','name');
+        if(empty($country)){
+            $country=false;
+            $dataCountry=false;
+        }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'country'=>$country
+                'country'=>$country,
+                'dataCountry'=>$dataCountry
             ]);
         }
     }
