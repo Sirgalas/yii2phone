@@ -41,7 +41,7 @@ class UsertelController extends Controller
         $searchModel = new UserTelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
-        if(!empty($country)){
+        if(empty($country)){
             $country=false;
         }
         if (Yii::$app->request->post('hasEditable')) {
@@ -75,7 +75,7 @@ class UsertelController extends Controller
     {
         $model = new UserTel();
         $country = ArrayHelper::map(Country::find()->asArray()->all(),'id','name');
-        if(!empty($country)){
+        if(empty($country)){
             $country=false;
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -102,7 +102,7 @@ class UsertelController extends Controller
         if(empty($country)){
             $country=false;
             $dataCountry=false;
-            
+
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
